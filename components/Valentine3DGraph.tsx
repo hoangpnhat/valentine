@@ -3,6 +3,7 @@ import ForceGraph3D from 'react-force-graph-3d';
 import { Music, PauseCircle, PlayCircle, RotateCw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import Image from "next/image";
 
 const Valentine3DGraph = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
@@ -198,7 +199,7 @@ const Valentine3DGraph = () => {
           nodeColor="color"
           linkColor="color"
           linkWidth={link => link.value * 2}
-          nodeRelSize={6}
+          nodeRelSize={3}
           nodeResolution={8}
           nodeOpacity={0.9}
           linkOpacity={0.4}
@@ -220,11 +221,13 @@ const Valentine3DGraph = () => {
           </DialogHeader>
           {selectedNode?.memory && (
             <div className="space-y-4">
-              <img 
+              {/* <img 
                 src={selectedNode.memory.image}
                 alt="Memory"
                 className="w-full h-auto max-h-screen object-cover rounded-lg shadow-lg transform transition-transform hover:scale-105"
-              />
+              /> */}
+              <Image src={selectedNode.memory.image} alt="Memory" width={500} height={300} priority />
+
               <p className="text-lg text-gray-700 italic text-center">
                 "{selectedNode.memory.quote}"
               </p>
