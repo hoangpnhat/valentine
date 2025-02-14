@@ -74,7 +74,7 @@ const Valentine3DGraph = () => {
     { id: 17, quote: "In your arms, I have found my safe place. 🤗💖", image: "/photo/17.jpg" },
     { id: 18, quote: "I love you more than yesterday, but less than tomorrow. 💕", image: "/photo/18.jpg" },
     { id: 19, quote: "My heart is and always will be yours. ❤️🔐", image: "/photo/19.jpg" },
-    { id: 20, quote: "You make even ordinary moments extraordinary. 🌟", image: "/photo/20.jpg" },
+    { id: 20, quote: "Yêu em quá à. 🌟", image: "/photo/20.jpg" },
     { id: 21, quote: "I love you, not just for who you are but for who I am with you. 💑", image: "/photo/21.jpg" },
     { id: 22, quote: "With you, I've found my forever home. 🏡❤️", image: "/photo/22.jpg" },
     { id: 23, quote: "You're the best thing that ever happened to me. 💖", image: "/photo/23.jpg" },
@@ -226,7 +226,7 @@ const Valentine3DGraph = () => {
       <audio
         ref={audioRef}
         loop
-        src="https://cf-media.sndcdn.com/IemaKgBfTw86.128.mp3?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiKjovL2NmLW1lZGlhLnNuZGNkbi5jb20vSWVtYUtnQmZUdzg2LjEyOC5tcDMqIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzM5NTE3MDE4fX19XX0_&Signature=SgxbzFCu-07nXi6RJUHtd8zN0mPEw6T36vHhU8zStT~0RtLe3qXrubZcZbPANHzbh08sc16kgyRr5T8BXTRgCOK7XZTuEJqrR95do8p1RLXTHwB1B~1Q7luTLdmWX7H-d3bom94th9CojFAVndA4eoN3uCu0qTW66RG-KfsARIuaWmrlXZvw53JJKw51Yq5bwaqcwarNw4-Ss0WFJC~kJTgFKwCGNqvboowvVSjhzJhB2UMun~4NAn~SxeqI~1pYKaBI1aaiOe-uC4mDqn02odBFrzai1YyGnp~Wjn6kGFMEOjs4ciY5eAcMY76HWqzJCKSDjcVzta0BGbJ760luQw__&Key-Pair-Id=APKAI6TU7MMXM5DG6EPQ"
+        src="https://cf-media.sndcdn.com/IymvrJ7f2902.128.mp3?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiKjovL2NmLW1lZGlhLnNuZGNkbi5jb20vSXltdnJKN2YyOTAyLjEyOC5tcDMqIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzM5NTIxMDUwfX19XX0_&Signature=MHfifjiM1u1j1muIbaeeFEEfGjvuAixhAV0z4g286cBoU~N7dWkpVisNSrjE0SOwicUQGh7uXCzM-XseE86DQ-bCO9vyRsbZNx9CPRTcYDzCd9xsiHJr-6ugHvi2l6ielIrji~ut5EhxZqc1qQ0dkIU6lX91UdFupNaYDrIIcALriW8RHFQMHG1wvf5mnXw5Hvg9X-Mh9VekEZ5FHXw2Fw5dlczuMtKyVVaCxiMf8Lr722RVY5Aj-8x0nkLwSJYHz1XFFK7OcNaywtgJ5GV1zd7gOixeRiDubgnRsHyBQOzY9aIWV3a0Cf6cMXqVAuL-nHle3NbF6ACQSeybdTY3bQ__&Key-Pair-Id=APKAI6TU7MMXM5DG6EPQ"
       />
       
       {graphData.nodes.length > 0 && (
