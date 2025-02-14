@@ -95,7 +95,12 @@ const Valentine3DGraph = () => {
     { id: 38, quote: "You are the most beautiful part of my life. 🌸💖", image: "/photo/38.jpg" },
     { id: 39, quote: "With you, love is effortless and perfect. 💞", image: "/photo/39.jpg" },
     { id: 40, quote: "My love for you is endless, like the stars in the sky. ✨❤️", image: "/photo/40.jpg" },
-    { id: 41, quote: "You are my Valentine today and always. 💘", image: "/photo/41.jpg" }
+    { id: 41, quote: "You are my Valentine today and always. 💘", image: "/photo/41.jpg" },
+    ...Array.from({ length: 100 }, (_, i) => ({
+      id: i + 41,
+      quote: "💕",
+      image: "/photo/20.jpg",
+    }))
   ];
   
   const createHeartShape = (t: number, scale = 10) => {
@@ -121,7 +126,7 @@ const Valentine3DGraph = () => {
         ...position, // Spread x, y, z coordinates
         id: memory.id,
         memory: memory,
-        color: `hsl(${300 + index * 15}, 100%, ${40 + index * 1}%)`,
+        color: `hsl(${300 + index * 15}, 100%, ${20 + index}%)`,
         size: 15 + Math.random() * 10
       };
     });
