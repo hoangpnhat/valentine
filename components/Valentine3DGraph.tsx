@@ -155,7 +155,7 @@ const Valentine3DGraph = () => {
       const distance = 2000;
       fgRef.current.cameraPosition({ x: 0, y: 0, z: distance });
     }
-  }, [memories]);
+  }, []);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -178,9 +178,7 @@ const Valentine3DGraph = () => {
     }
 
     return () => {
-      if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
-      }
     };
   }, [isRotating]);
 
