@@ -1,33 +1,72 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
-import ForceGraph3D from 'react-force-graph-3d';
-import { Music, PauseCircle, PlayCircle, RotateCw } from 'lucide-react';
+import ForceGraph3D, { ForceGraphMethods, NodeObject, LinkObject } from 'react-force-graph-3d';
+import { Music, PauseCircle, RotateCw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import Image from "next/image";
 
+// Define types for our data
+interface Memory {
+  id: number;
+  quote: string;
+  image: string;
+}
+
+interface Node {
+  id: number;
+  memory: Memory;
+  x: number;
+  y: number;
+  z: number;
+  color: string;
+  size: number;
+}
+
+interface Link {
+  source: number;
+  target: number;
+  color: string;
+  value: number;
+}
+
+interface GraphData {
+  nodes: Node[];
+  links: Link[];
+}
+
+// Define a more specific type for ForceGraph3D ref
+// interface ForceGraphInstance {
+//   cameraPosition: (position: { x: number; y: number; z: number }) => void;
+// }
+// // Extend the ForceGraph3D type
+// type ForceGraph3DInstance = typeof ForceGraph3D & {
+//   cameraPosition: (position: { x: number; y: number; z: number }) => void;
+//   // Add other methods you might use
+// };
+
 const Valentine3DGraph = () => {
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRotating, setIsRotating] = useState(true);
-  const audioRef = useRef(null);
-  const fgRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const fgRef = useRef<ForceGraphMethods<NodeObject<Node>, LinkObject<Node, Link>> | undefined>(undefined);
 
-
-  const memories = [
+  const memories: Memory[] = [
     { id: 0, quote: "Every moment with you feels like magic ✨", image: "/photo/0.jpg" },
     { id: 1, quote: "You make my heart smile 💝", image: "/photo/1.jpg" },
     { id: 2, quote: "Forever isn't long enough with you 💕", image: "/photo/2.jpg" },
     { id: 3, quote: "You are my today and all of my tomorrows. 💖", image: "/photo/3.jpg" },
     { id: 4, quote: "Loving you is the best decision I ever made. 💘", image: "/photo/4.jpg" },
-    { id: 5, quote: "You are the melody to my heart’s song. 🎶💕", image: "/photo/5.jpg" },
+    { id: 5, quote: "You are the melody to my heart's song. 🎶💕", image: "/photo/5.jpg" },
     { id: 6, quote: "Every love story is beautiful, but ours is my favorite. 💞", image: "/photo/6.jpg" },
     { id: 7, quote: "I found my forever in you. 💍❤️", image: "/photo/7.jpg" },
     { id: 8, quote: "You make my world brighter just by being in it. ☀️💖", image: "/photo/8.jpg" },
     { id: 9, quote: "Holding your hand is my favorite adventure. 🌍💕", image: "/photo/9.jpg" },
     { id: 10, quote: "You are the missing piece that completes my heart. 🧩❤️", image: "/photo/10.jpg" },
     { id: 11, quote: "Every time I see you, I fall in love all over again. 😍", image: "/photo/11.jpg" },
-    { id: 12, quote: "I’d choose you in every lifetime. 💑💞", image: "/photo/12.jpg" },
+    { id: 12, quote: "I'd choose you in every lifetime. 💑💞", image: "/photo/12.jpg" },
     { id: 13, quote: "Your love is the greatest gift I have ever received. 🎁❤️", image: "/photo/13.jpg" },
     { id: 14, quote: "You are my dream come true. ✨💖", image: "/photo/14.jpg" },
     { id: 15, quote: "Loving you is as easy as breathing. ❤️", image: "/photo/15.jpg" },
@@ -37,8 +76,8 @@ const Valentine3DGraph = () => {
     { id: 19, quote: "My heart is and always will be yours. ❤️🔐", image: "/photo/19.jpg" },
     { id: 20, quote: "You make even ordinary moments extraordinary. 🌟", image: "/photo/20.jpg" },
     { id: 21, quote: "I love you, not just for who you are but for who I am with you. 💑", image: "/photo/21.jpg" },
-    { id: 22, quote: "With you, I’ve found my forever home. 🏡❤️", image: "/photo/22.jpg" },
-    { id: 23, quote: "You’re the best thing that ever happened to me. 💖", image: "/photo/23.jpg" },
+    { id: 22, quote: "With you, I've found my forever home. 🏡❤️", image: "/photo/22.jpg" },
+    { id: 23, quote: "You're the best thing that ever happened to me. 💖", image: "/photo/23.jpg" },
     { id: 24, quote: "You are the reason I believe in love. 💘", image: "/photo/24.jpg" },
     { id: 25, quote: "My love for you grows stronger every day. 🌱💕", image: "/photo/25.jpg" },
     { id: 26, quote: "No words can describe how much you mean to me. 💓", image: "/photo/26.jpg" },
@@ -46,11 +85,11 @@ const Valentine3DGraph = () => {
     { id: 28, quote: "I never knew love could feel this way until I met you. 💖", image: "/photo/28.jpg" },
     { id: 29, quote: "You are my best friend, my soulmate, my everything. 💞", image: "/photo/29.jpg" },
     { id: 30, quote: "Every moment with you is a precious memory. 📸❤️", image: "/photo/30.jpg" },
-    { id: 31, quote: "You’re not just my love, you’re my life. 💕", image: "/photo/31.jpg" },
-    { id: 32, quote: "I’d rather spend one lifetime with you than face all the ages alone. 🌹", image: "/photo/32.jpg" },
-    { id: 33, quote: "You’re the sunshine that lights up my darkest days. ☀️💕", image: "/photo/33.jpg" },
-    { id: 34, quote: "Your love is the sweetest thing I’ve ever known. 🍬❤️", image: "/photo/34.jpg" },
-    { id: 35, quote: "When I’m with you, time stops and the world fades away. ⏳💖", image: "/photo/35.jpg" },
+    { id: 31, quote: "You're not just my love, you're my life. 💕", image: "/photo/31.jpg" },
+    { id: 32, quote: "I'd rather spend one lifetime with you than face all the ages alone. 🌹", image: "/photo/32.jpg" },
+    { id: 33, quote: "You're the sunshine that lights up my darkest days. ☀️💕", image: "/photo/33.jpg" },
+    { id: 34, quote: "Your love is the sweetest thing I've ever known. 🍬❤️", image: "/photo/34.jpg" },
+    { id: 35, quote: "When I'm with you, time stops and the world fades away. ⏳💖", image: "/photo/35.jpg" },
     { id: 36, quote: "My heart beats just for you. 💓", image: "/photo/36.jpg" },
     { id: 37, quote: "I love you more than words can express. 📝❤️", image: "/photo/37.jpg" },
     { id: 38, quote: "You are the most beautiful part of my life. 🌸💖", image: "/photo/38.jpg" },
@@ -59,7 +98,6 @@ const Valentine3DGraph = () => {
     { id: 41, quote: "You are my Valentine today and always. 💘", image: "/photo/41.jpg" }
   ];
   
-
   const createHeartShape = (t: number, scale = 10) => {
     // Parametric equations for a heart shape
     const x = 16 * Math.pow(Math.sin(t), 3);
@@ -75,7 +113,7 @@ const Valentine3DGraph = () => {
 
   useEffect(() => {
     // Create nodes positioned in a heart shape
-    const nodes = memories.map((memory, index) => {
+    const nodes: Node[] = memories.map((memory, index) => {
       const t = (index / memories.length) * 2 * Math.PI;
       const position = createHeartShape(t);
       
@@ -89,7 +127,7 @@ const Valentine3DGraph = () => {
     });
 
     // Create links between nearby nodes
-    const links = [];
+    const links: Link[] = [];
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         // Calculate distance between nodes
@@ -109,7 +147,7 @@ const Valentine3DGraph = () => {
         }
       }
     }
-
+    
     setGraphData({ nodes, links });
 
     // Initial camera position for better view of the heart
@@ -117,10 +155,10 @@ const Valentine3DGraph = () => {
       const distance = 2000;
       fgRef.current.cameraPosition({ x: 0, y: 0, z: distance });
     }
-  }, []);
+  }, [memories]);
 
   useEffect(() => {
-    let animationFrameId;
+    let animationFrameId: number;
     const animate = () => {
       if (fgRef.current && isRotating) {
         const graph = fgRef.current;
@@ -140,11 +178,13 @@ const Valentine3DGraph = () => {
     }
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, [isRotating]);
 
-  const handleNodeClick = (node) => {
+  const handleNodeClick = (node: Node) => {
     setSelectedNode(node);
   };
 
@@ -165,7 +205,7 @@ const Valentine3DGraph = () => {
     <div className="w-full h-screen bg-gradient-to-br from-pink-100 to-purple-100">
       <div className="absolute top-4 left-4 z-10 space-y-4">
         <h1 className="text-3xl font-bold text-pink-600 animate-pulse">
-          Happy Valentine's Day! 💝
+          Happy Valentine&apos;s Day! 💝
         </h1>
         <div className="flex space-x-2">
           <Button 
@@ -195,10 +235,10 @@ const Valentine3DGraph = () => {
         <ForceGraph3D
           ref={fgRef}
           graphData={graphData}
-          nodeLabel={node => node.memory?.date || ''}
+          nodeLabel={(node: Node) => node.memory?.quote || ''}
           nodeColor="color"
           linkColor="color"
-          linkWidth={link => link.value * 2}
+          linkWidth={(link: Link) => link.value * 2}
           nodeRelSize={3}
           nodeResolution={8}
           nodeOpacity={0.9}
@@ -216,20 +256,22 @@ const Valentine3DGraph = () => {
         <DialogContent className="bg-white/95 backdrop-blur rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-pink-600">
-              {selectedNode?.memory?.date} ❤️
+              Memory ❤️
             </DialogTitle>
           </DialogHeader>
           {selectedNode?.memory && (
             <div className="space-y-4">
-              {/* <img 
+              <Image 
                 src={selectedNode.memory.image}
                 alt="Memory"
-                className="w-full h-auto max-h-screen object-cover rounded-lg shadow-lg transform transition-transform hover:scale-105"
-              /> */}
-              <Image src={selectedNode.memory.image} alt="Memory" width={500} height={300} priority />
+                width={500}
+                height={300}
+                priority
+                className="w-full h-auto object-cover rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              />
 
               <p className="text-lg text-gray-700 italic text-center">
-                "{selectedNode.memory.quote}"
+                &ldquo;{selectedNode.memory.quote}&rdquo;
               </p>
             </div>
           )}

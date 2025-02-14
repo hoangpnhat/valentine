@@ -1,10 +1,14 @@
 'use client'
-import Valentine3DGraph from '@/components/Valentine3DGraph'
+import dynamic from 'next/dynamic';
 
+const Valentine3DGraphWithNoSSR = dynamic(
+  () => import('@/components/Valentine3DGraph'),
+  { ssr: false }
+);
 export default function Home() {
   return (
     <main>
-      <Valentine3DGraph />
+      <Valentine3DGraphWithNoSSR />
     </main>
   )
 }
